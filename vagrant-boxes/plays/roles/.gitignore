@@ -1,0 +1,3 @@
+# Ignore roles installed from galaxy
+geerlingguy.java
+geerlingguy.jenkins

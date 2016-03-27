@@ -1,0 +1,56 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "debian/jessie64"
+
+  config.vm.provision :ansible do |ansible|
+    ansible.playbook = "plays/vagrant-bootstrap.yml"
+  end
+
+  # Consul VM, used by microservices for registration and
+  # service discovery. This is only meant for educational
+  # purposes, consul should always be clusterized!
+  config.vm.define "consul" do |consul|
+
+    consul.vm.hostname = "consul"
+    consul.vm.network "private_network", ip: "192.168.33.10"
+    consul.vm.network "forwarded_port", guest: 8500, host: 8500
+
+    consul.vm.provider "virtualbox" do |vb|
+        vb.memory = "256"
+    end
+
+    # Run Consul agent service
+    consul.vm.provision "docker" do |d|
+      d.run "consul",
+        image: "progrium/consul",
+        cmd: "-server -bootstrap -dc LOCAL",
+        daemonize: true,
+        auto_assign_name: false,
+        args: "-p 8400:8400 -p 8500:8500 -p 8600:53/udp -h consul"
+    end
+  end
+
+
+  # Define Jenkins virtual machine. This will run the jobs
+  # on our behalf, that deploy all microservices.
+  config.vm.define "jenkins" do |jenkins|
+
+    jenkins.vm.hostname = "jenkins"
+    jenkins.vm.network "private_network", ip: "192.168.33.50"
+    # Don't forward any ports!
+
+    jenkins.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+    end
+
+    # Provide another ansible configuration
+    jenkins.vm.provision "ansible" do |ansible|
+      ansible.playbook = "plays/jenkins.yml"
+      ansible.galaxy_role_file = "plays/ansible-roles.txt"
+    end
+
+  end
+
+end

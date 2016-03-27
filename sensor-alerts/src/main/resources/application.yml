@@ -1,0 +1,19 @@
+server:
+  port: 0
+
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        preferIpAddress: false
+        ipAddress: 127.0.0.1
+
+endpoints:
+  health:
+    sensitive: false
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true

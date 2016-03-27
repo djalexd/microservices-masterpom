@@ -1,0 +1,7 @@
+---
+
+- file: path=/var/lib/jenkins/init.groovy.d state=directory owner=jenkins
+
+- name: copy default jobs script
+  copy: src=add-default-jobs.groovy dest=/var/lib/jenkins/init.groovy.d
+  #notify: restart jenkins

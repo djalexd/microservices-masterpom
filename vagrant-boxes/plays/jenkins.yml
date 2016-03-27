@@ -1,0 +1,40 @@
+---
+#- hosts: all
+#  become: yes
+#  become_user: root
+#  tasks:
+#    - name: update all repos
+#      apt: update_cache=yes
+#
+#    - name: install java7
+#      apt: name=openjdk-7-jdk state=present
+#
+#    - name: install java8
+#      apt: name=openjdk-8-jdk state=absent
+#
+#    - name: create jenkins directory
+#      file: path=/opt/jenkins state=directory
+#
+#    - name: download jenkins
+#      get_url: url=http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war dest=/opt/jenkins.war
+#
+#    - name: configure JENKINS_HOME
+#      shell: export JENKINS_HOME=/opt/jenkins
+#
+#    - name: run jenkins
+#      shell: nohup java -jar /opt/jenkins.war > /var/log/jenkins.log 2>&1
+#
+#    - name: generate jobs
+#      include: jenkins-jobs.yml
+
+- hosts: all
+  become: yes
+  become_user: root
+  vars:
+    jenkins_hostname: 192.168.33.50
+    jenkins_plugins:
+      - git
+      - ssh
+  roles:
+    - geerlingguy.jenkins
+    - jenkins-jobs
