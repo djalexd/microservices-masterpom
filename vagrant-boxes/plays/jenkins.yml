@@ -1,40 +1,37 @@
 ---
-#- hosts: all
-#  become: yes
-#  become_user: root
-#  tasks:
-#    - name: update all repos
-#      apt: update_cache=yes
-#
-#    - name: install java7
-#      apt: name=openjdk-7-jdk state=present
-#
-#    - name: install java8
-#      apt: name=openjdk-8-jdk state=absent
-#
-#    - name: create jenkins directory
-#      file: path=/opt/jenkins state=directory
-#
-#    - name: download jenkins
-#      get_url: url=http://mirrors.jenkins-ci.org/war-stable/latest/jenkins.war dest=/opt/jenkins.war
-#
-#    - name: configure JENKINS_HOME
-#      shell: export JENKINS_HOME=/opt/jenkins
-#
-#    - name: run jenkins
-#      shell: nohup java -jar /opt/jenkins.war > /var/log/jenkins.log 2>&1
-#
-#    - name: generate jobs
-#      include: jenkins-jobs.yml
-
-- hosts: all
+- hosts: jenkins
   become: yes
   become_user: root
   vars:
+    maven_version: 3.3.9
     jenkins_hostname: 192.168.33.50
     jenkins_plugins:
       - git
       - ssh
+      - job-dsl
+      - rundeck
+      - parameterized-trigger
+      - cloudbees-folder
+      - credentials
+      - promoted-builds
+      - maven-plugin
+      - javadoc
+      - mailer
+      - junit
+      - rebuild
+      - token-macro
+      - project-inheritance
+      - ansible
+      - jobConfigHistory
+      - timestamper
   roles:
     - geerlingguy.jenkins
-    - jenkins-jobs
+    - { role: jenkins-jobs, git_checkout_jobs: false }
+  pre_tasks:
+    - apt: name={{ item }} state=present
+      with_items:
+        - git
+    - name: install maven
+      get_url: url=http://archive.apache.org/dist/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz dest=/tmp/apache-maven-bin.tar.gz
+    - unarchive: src=/tmp/apache-maven-bin.tar.gz dest=/var/lib copy=no
+    - shell: rm -rf /usr/local/bin/mvn && ln -s /var/lib/apache-maven-{{ maven_version }}/bin/mvn /usr/local/bin/mvn

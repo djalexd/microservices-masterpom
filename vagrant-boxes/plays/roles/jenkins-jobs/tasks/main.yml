@@ -1,7 +1,26 @@
 ---
+- set_fact:
+    jenkins_initd="/var/lib/jenkins/init.groovy.d"
+  tags:
+    - 'seed-jobs'
 
-- file: path=/var/lib/jenkins/init.groovy.d state=directory owner=jenkins
+- file: path="{{ jenkins_initd }}" state=directory owner=jenkins
 
-- name: copy default jobs script
-  copy: src=add-default-jobs.groovy dest=/var/lib/jenkins/init.groovy.d
-  #notify: restart jenkins
+- copy: src="{{ jobs_src_path }}" dest="{{ jobs_location }}"
+  when: not git_checkout_jobs
+  tags:
+    - 'seed-jobs'
+
+- git:
+     repo: "{{ jobs_git_repo }}"
+     version: "{{ jobs_git_repo_branch }}"
+     dest: "{{ jobs_location }}"
+     accept_hostkey: yes
+  when: git_checkout_jobs
+  tags:
+    - 'seed-jobs'
+
+- template: src="add-seed-jobs.groovy" dest="{{ jenkins_initd }}"
+  notify: restart jenkins
+  tags:
+    - 'seed-jobs'

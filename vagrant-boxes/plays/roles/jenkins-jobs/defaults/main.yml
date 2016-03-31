@@ -1,0 +1,9 @@
+---
+git_checkout_jobs: false
+
+jobs_src_path: "jobs/"
+jobs_git_repo: "https://github.com/djalexd/microservices-job-templates.git"
+jobs_git_repo_branch: "master"
+
+jobs_location: "/usr/share/lib/jenkins/jobs"
+jobs_pattern: "seed-jobs/*.groovy"
