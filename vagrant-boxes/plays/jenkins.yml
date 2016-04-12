@@ -3,6 +3,7 @@
   become: yes
   become_user: root
   vars:
+    java_version: 8
     maven_version: 3.3.9
     jenkins_hostname: 192.168.33.50
     jenkins_plugins:
@@ -24,9 +25,12 @@
       - ansible
       - jobConfigHistory
       - timestamper
+      - ws-cleanup
+      - delivery-pipeline-plugin
   roles:
+    - williamyeh.oracle-java
     - geerlingguy.jenkins
-    - { role: jenkins-jobs, git_checkout_jobs: false }
+    - { role: jenkins-jobs, git_checkout_jobs: false, jobs_pattern: '**/*.groovy' }
   pre_tasks:
     - apt: name={{ item }} state=present
       with_items:

@@ -6,12 +6,14 @@
 
 - file: path="{{ jenkins_initd }}" state=directory owner=jenkins
 
-- copy: src="{{ jobs_src_path }}" dest="{{ jobs_location }}"
+- name: "copy local directory {{ jobs_src_path }} to {{ jobs_location }}"
+  copy: src="{{ jobs_src_path }}" dest="{{ jobs_location }}"
   when: not git_checkout_jobs
   tags:
     - 'seed-jobs'
 
-- git:
+- name: "git checkout {{ jobs_git_repo }}/{{ jobs_git_repo_branch }} to {{ jobs_location }}"
+  git:
      repo: "{{ jobs_git_repo }}"
      version: "{{ jobs_git_repo_branch }}"
      dest: "{{ jobs_location }}"
@@ -20,7 +22,8 @@
   tags:
     - 'seed-jobs'
 
-- template: src="add-seed-jobs.groovy" dest="{{ jenkins_initd }}"
+- name: Generate seeds based on add-seed-jobs.groovy
+  template: src="add-seed-jobs.groovy" dest="{{ jenkins_initd }}"
   notify: restart jenkins
   tags:
-    - 'seed-jobs'
+    - always

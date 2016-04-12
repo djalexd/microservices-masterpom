@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SensorConfigApplication.class)
 @WebAppConfiguration
-public class SensorConfigApplicationTests {
+public class SensorConfigApplicationIT {
 
 	@Test
 	public void contextLoads() {
