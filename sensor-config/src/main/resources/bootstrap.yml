@@ -1,7 +1,11 @@
 spring:
   application:
     name: sensor-config
-    version: v1
+
+spring:
+  cloud:
+    config:
+      enabled: false
 
 #  cloud:
 #    config:

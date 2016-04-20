@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
+			<artifactId>spring-cloud-config-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -90,69 +90,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<!--<plugin>
-				<groupId>net.ggtools.maven</groupId>
-				<artifactId>regex-copy-maven-plugin</artifactId>
-				<configuration>
-					<sourceDirectory>${project.build.directory}/</sourceDirectory>
-					<source>${project.build.finalName}.jar</source>
-					<destinationDirectory>${project.build.directory}</destinationDirectory>
-					<destination>spring-boot-app.jar</destination>
-					<overwrite>true</overwrite>
-				</configuration>
 				<executions>
 					<execution>
-						<id>regex-copy-docker-jar</id>
-						<phase>package</phase>
 						<goals>
-							<goal>regex-copy</goal>
+							<goal>repackage</goal>
 						</goals>
 					</execution>
 				</executions>
-			</plugin>-->
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.4</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<shortRevisionLength>6</shortRevisionLength>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.5</version>
-				<configuration>
-					<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
-					<imageName>${project.name}</imageName>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
-					<useGitCommitId>true</useGitCommitId>
-					<noCache>true</noCache>
-					<forceTags>true</forceTags>
-					<imageTags>
-						<!--<imageTag>${buildNumber}</imageTag>-->
-						<imageTag>${project.version}</imageTag>
-						<imageTag>latest</imageTag>
-					</imageTags>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -41,7 +41,7 @@ fi
 Echo "Rolling out version $NEW_VERSION (sha=$GIT_COMMIT) of $APP using Consul $CONSUL_ADDR"
 
 # Run the new service.
-nohup java -jar $APP-$NEW_VERSION.jar
+docker run -d $APP:$GIT_COMMIT
 
 # Register the new service (auto?).
 

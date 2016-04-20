@@ -1,8 +1,15 @@
 spring:
   cloud:
+    consul:
+      host: ${CONSUL_ADDR:localhost}
+      port: ${CONSUL_PORT:8500}
+    discovery:
+      preferIpAddress: false
+      ipaddress: 127.0.0.1
     config:
       server:
         git:
-          uri: file://${user.home}/workspace/spring-boot-config-repo
+          uri: https://github.com/djalexd/spring-boot-config-repo.git
+
 server:
   port: 8888

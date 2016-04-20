@@ -66,4 +66,63 @@
 		<!--<url>git://git@github.com:djalexd/microservices-masterpom.git</url>-->
 	</scm>
 
+
+	<profiles>
+		<!-- The docker-build profile takes care of building the docker image
+		     based on some configuration found in respective project:
+		       - <module>/src/main/docker needs to be a Dockerfile directory
+		       - <module>/pom.xml needs to match buildName with whatever JAR
+		         is ran with Dockerfile.
+		-->
+		<profile>
+			<id>docker-build</id>
+			<build>
+				<plugins>
+
+					<!-- Unfortunately, we need this here in order to allow its
+					     execution before Docker build. Without it, the JAR file
+					     you can -->
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>0.4.5</version>
+						<configuration>
+							<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+							<imageName>${project.name}</imageName>
+							<resources>
+								<resource>
+									<targetPath>/</targetPath>
+									<directory>${project.build.directory}</directory>
+									<include>${project.build.finalName}.jar</include>
+								</resource>
+							</resources>
+							<useGitCommitId>true</useGitCommitId>
+							<noCache>true</noCache>
+							<forceTags>true</forceTags>
+							<imageTags>
+								<!--<imageTag>${buildNumber}</imageTag>-->
+								<imageTag>${project.version}</imageTag>
+								<imageTag>latest</imageTag>
+							</imageTags>
+						</configuration>
+						<executions>
+							<execution>
+								<id>build</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
