@@ -68,6 +68,11 @@ Vagrant.configure(2) do |config|
 
     lego.vm.provision "docker"
     # Provide a simple docker host without any TLS
+
+    lego.vm.provision "ansible" do |ansible|
+      ansible.playbook = "plays/lego.yml"
+      ansible.galaxy_role_file = "plays/ansible-roles.txt"
+    end
   end
 
 end

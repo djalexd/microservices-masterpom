@@ -1,4 +1,6 @@
 ---
+# This script runs before any ansible roles are installed, so only basic
+# stuff needs to fit in here :)
 - hosts: all
   become: yes
   become_user: root
@@ -8,5 +10,10 @@
       with_items:
         - root
         - vagrant
-    - name: install https transport for apt
-      apt: name=apt-transport-https state=present
+    - name: update repo list
+      apt: update_cache=yes
+    - name: install common modules
+      apt: name={{ item }} state=present
+      with_items:
+        - apt-transport-https
+        - vim
