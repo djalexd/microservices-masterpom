@@ -1,15 +1,16 @@
 server:
   port: 0
 
-spring:
-  cloud:
-    consul:
-      host: ${CONSUL_ADDR:localhost}
-      port: ${CONSUL_PORT:8500}
-      discovery:
-        preferIpAddress: false
-        ipAddress: 127.0.0.1
-        #serviceName: ${spring.application.name}
+#
+# >> If you are using spring-cloud-starter-consul-all or spring-cloud-starter-consul-config, you need to put values in bootstrap.properties.
+#
+# https://github.com/spring-cloud/spring-cloud-consul/blob/master/docs/src/main/asciidoc/spring-cloud-consul.adoc#registering-with-consul
+#
+  #spring:
+#  cloud:
+#    consul:
+#      host: 192.168.33.10
+#      port: 8501
 
 endpoints:
   health:
@@ -22,3 +23,4 @@ endpoints:
 logging:
   level:
     org.springframework.cloud.consul: DEBUG
+    org.apache.http: DEBUG
