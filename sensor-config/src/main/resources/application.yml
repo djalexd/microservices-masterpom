@@ -4,8 +4,8 @@ server:
 spring:
   cloud:
     consul:
-      host: localhost
-      port: 8500
+      host: ${CONSUL_ADDR:localhost}
+      port: ${CONSUL_PORT:8500}
       discovery:
         preferIpAddress: false
         ipAddress: 127.0.0.1
