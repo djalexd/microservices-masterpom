@@ -1,12 +1,7 @@
 spring:
   application:
     name: sensor-config
-
-spring:
   cloud:
     config:
       enabled: false
-
-#  cloud:
-#    config:
 #      uri: http://127.0.0.1:8888
