@@ -6,5 +6,5 @@ spring:
       enabled: false
 #      uri: http://127.0.0.1:8888
     consul:
-      host: 192.168.33.10
-      port: 8500
+      host: ${CONSUL_ADDR:localhost}
+      port: ${CONSUL_PORT:8500}

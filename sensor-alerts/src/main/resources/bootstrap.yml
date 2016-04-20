@@ -1,8 +1,10 @@
 spring:
   application:
     name: sensor-alerts
-
   cloud:
     config:
       enabled: false
 #      uri: http://127.0.0.1:8888
+    consul:
+      host: ${CONSUL_ADDR:localhost}
+      port: ${CONSUL_PORT:8500}

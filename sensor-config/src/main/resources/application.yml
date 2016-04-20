@@ -6,11 +6,11 @@ server:
 #
 # https://github.com/spring-cloud/spring-cloud-consul/blob/master/docs/src/main/asciidoc/spring-cloud-consul.adoc#registering-with-consul
 #
-  #spring:
+#spring:
 #  cloud:
 #    consul:
-#      host: 192.168.33.10
-#      port: 8501
+#      host: localhost
+#      port: 8500
 
 endpoints:
   health:
