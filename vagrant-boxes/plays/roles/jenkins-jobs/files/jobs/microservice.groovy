@@ -287,7 +287,7 @@ def chainJobs(def jobs) {
 				}
 				projects nextJob.name
 				condition 'UNSTABLE_OR_BETTER'
-				triggerWithNoParameters 'false'
+				triggerWithNoParameters 'true'
 			}
 
 		})

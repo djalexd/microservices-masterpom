@@ -25,7 +25,23 @@ public class DemoController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/me")
-    public ServiceInstance me() {
-        return discoveryClient.getLocalServiceInstance();
+    public String me() {
+	    final StringBuilder sb = new StringBuilder();
+
+	    discoveryClient.getInstances("sensor-config").forEach(c -> sb.append(c.getServiceId()).append(" -> ").append(c.getMetadata()).append("<br/>"));
+        sb.append(discoveryClient.getLocalServiceInstance());
+
+	    return sb.toString();
     }
+
+	@RequestMapping(method = RequestMethod.GET, value = "/me2")
+	public String me2() {
+		final StringBuilder sb = new StringBuilder();
+
+		discoveryClient.getInstances("sensor-config").forEach(c -> sb.append(c.getServiceId()).append(" -> ").append(c.getMetadata()).append("<br/>"));
+		sb.append(discoveryClient.getLocalServiceInstance());
+
+		return sb.toString();
+	}
+
 }

@@ -1,3 +1,6 @@
+server:
+  port: 0
+
 spring:
   cloud:
     consul:
@@ -6,6 +9,7 @@ spring:
       discovery:
         preferIpAddress: false
         ipAddress: 127.0.0.1
+        #serviceName: ${spring.application.name}
 
 endpoints:
   health:
