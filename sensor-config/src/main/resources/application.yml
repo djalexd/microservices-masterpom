@@ -12,6 +12,15 @@ server:
 #      host: localhost
 #      port: 8500
 
+spring:
+  cloud:
+    config:
+      enabled: false
+    consul:
+      discovery:
+        preferIpAddress: true
+        instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
 endpoints:
   health:
     sensitive: false
@@ -23,4 +32,4 @@ endpoints:
 logging:
   level:
     org.springframework.cloud.consul: DEBUG
-    org.apache.http: DEBUG
+    org.apache.http: WARN

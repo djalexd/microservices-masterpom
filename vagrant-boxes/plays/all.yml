@@ -1,0 +1,103 @@
+---
+
+# This script runs before any ansible roles are installed, so only basic
+# stuff needs to fit in here :)
+- hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: setup ssh keys
+      authorized_key: user={{ item }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      with_items:
+        - root
+        - vagrant
+    - name: update repo list
+      apt: update_cache=yes
+    - name: install common modules
+      apt: name={{ item }} state=present
+      with_items:
+        - apt-transport-https
+        - vim
+
+# Consul hosts
+- hosts: consul
+  become: yes
+  become_user: root
+  roles:
+    # The consul_bind_address would only work with Vagrant local setup, because
+    # the way it selects the address.
+    - role: savagegus.consul
+      consul_bind_address: "{{ ansible_all_ipv4_addresses[0] }}"
+      consul_client_address: "{{ ansible_all_ipv4_addresses[0] }}"
+      consul_is_server: true
+      consul_bootstrap: true
+      consul_is_ui: true
+      consul_datacenter: local
+      consul_node_name: consul
+      consul_install_nginx: false
+      consul_install_nginx_config: false
+      consul_enable_nginx_config: false
+      consul_use_systemd: true
+
+# Jenkins hosts
+- hosts: jenkins
+  become: yes
+  become_user: root
+  vars:
+    java_version: 8
+    maven_version: 3.3.9
+    jenkins_hostname: 192.168.33.50
+    jenkins_plugins:
+      - git
+      - ssh
+      - job-dsl
+      - rundeck
+      - parameterized-trigger
+      - cloudbees-folder
+      - credentials
+      - promoted-builds
+      - maven-plugin
+      - javadoc
+      - mailer
+      - junit
+      - rebuild
+      - token-macro
+      - project-inheritance
+      - ansible
+      - jobConfigHistory
+      - timestamper
+      - ws-cleanup
+      - delivery-pipeline-plugin
+  roles:
+    - maven
+    - williamyeh.oracle-java
+    - geerlingguy.jenkins
+    - { role: jenkins-jobs, git_checkout_jobs: false, jobs_pattern: '**/*.groovy' }
+  pre_tasks:
+    # TODO Move this to hosts: all setup above
+    - apt: name={{ item }} state=present
+      with_items:
+        - git
+
+# A simple docker host
+- hosts: lego
+  become: yes
+  become_user: root
+  roles:
+    - role: savagegus.consul
+      consul_bind_address: "{{ ansible_all_ipv4_addresses[0] }}"
+      consul_client_address: "{{ ansible_all_ipv4_addresses[0] }}"
+      consul_is_server: false
+      consul_bootstrap: false
+      consul_is_ui: false
+      consul_node_name: "{{ inventory_hostname }}"
+      consul_install_nginx: false
+      consul_install_nginx_config: false
+      consul_enable_nginx_config: false
+      consul_use_systemd: true
+      consul_datacenter: local
+      consul_servers:
+        - '192.168.33.10'
+      consul_join_at_start: true
+    - role: resmo.ntp
+      ntp_config_server: [2.ubuntu.pool.ntp.org, 1.ubuntu.pool.ntp.org]

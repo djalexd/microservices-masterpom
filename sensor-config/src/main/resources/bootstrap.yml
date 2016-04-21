@@ -8,3 +8,5 @@ spring:
     consul:
       host: ${CONSUL_ADDR:localhost}
       port: ${CONSUL_PORT:8500}
+
+#spring.cloud.consul.discovery

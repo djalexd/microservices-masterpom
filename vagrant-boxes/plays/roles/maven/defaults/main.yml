@@ -1,0 +1,3 @@
+maven_version: '3.3.9'
+maven_symlink_location: '/usr/local/bin/mvn'
+maven_temporary_location: '/tmp/apache-maven-bin.tar.gz'
